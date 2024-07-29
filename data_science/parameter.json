@@ -1,14 +1,13 @@
 {
     "ground_truth": "channel_id",
     "hidden_size": [
-        128,
-        128,
-        128
+        32,
+        32
     ],
-    "num_epochs": 100,
-    "batch_size": 64,
-    "momentum_value": 0.9,
-    "learning_rate": 0.0001,
+    "num_epochs": 200,
+    "batch_size": 32,
+    "momentum_value": 1,
+    "learning_rate": 0.0002,
     "dropout": 0.2,
     "in_channels": 1,
     "out_channels": [
@@ -113,8 +112,6 @@
     "PCA_features": [
         "PC1",
         "PC2",
-        "PC3",
-        "PC4",
-        "PC5"
+        "PC3"
     ]
 }
