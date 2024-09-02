@@ -4,9 +4,14 @@
         "exp_info": "experiment on 5 different kinds of liquid with channel 0 = apple cider vinegar, channel 1 = black vinegar, channel 2 = sesame oil, channel 3 = soy sauce, channel 4 = red wine. load resistor is 10K at R2 position with ads1115 1 bit = 0.125mV",
         "exp_time(ms)": 30000,
         "duration(s)": 5,
-        "repeat": 5,
+        "repeat": 10,
         "heating_time(ms)": 1,
         "heater_settings": [
+            140,
+            150,
+            152,
+            155,
+            157,
             160,
             162,
             165,
@@ -37,7 +42,12 @@
             230,
             232,
             235,
-            237
+            237,
+            240,
+            242,
+            245,
+            247,
+            250
         ],
         "channel": [
             0,

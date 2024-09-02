@@ -2,3 +2,5 @@
 raw_data/
 database/
 kedro_sample/
+processed_data/
+data_science/scripts/venv/
