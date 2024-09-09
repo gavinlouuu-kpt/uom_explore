@@ -17,6 +17,9 @@ def create_sql_table(db_path, query):
 
 # Function to read CSV and insert data into the database
 def insert_data_from_csv(experiment_batch, experiment_id, channel_id, file_path):
+    conn = sqlite3.connect(db_path)  # Add this line
+    cursor = conn.cursor()  # Add this line
+    
     with open(file_path, 'r') as file:
         reader = csv.reader(file)
         first_row = next(reader)
@@ -27,13 +30,16 @@ def insert_data_from_csv(experiment_batch, experiment_id, channel_id, file_path)
             int(first_row[1])
             float(first_row[2])
             # First row is valid data, process it
-            process_row(experiment_batch, experiment_id, channel_id, first_row)
+            process_row(experiment_batch, experiment_id, channel_id, cursor, first_row)  # Update this line
         except ValueError:
             # First row is header, skip it and process the rest
             pass
         
         for row in reader:
-            process_row(experiment_batch, experiment_id, channel_id, row)
+            process_row(experiment_batch, experiment_id, channel_id, cursor, row)  # Update this line
+    
+    conn.commit()  # Add this line
+    conn.close()  # Add this line
 
 def process_row(experiment_batch, experiment_id, channel_id, cursor, row):
     heater_setting, timestamp, sensor_value = row
@@ -65,7 +71,7 @@ def process_folders(root_folder):
 if __name__ == '__main__':
 
     # Root folder containing all batch folders
-    root_folder = 'D:\\code\\uom_explore\\raw_data\\2024_08_29'
+    root_folder = 'D:\\code\\uom_explore\\raw_data\\2024_09_02'
     query = '''
     CREATE TABLE IF NOT EXISTS ExperimentData (
         experiment_batch TEXT NOT NULL,

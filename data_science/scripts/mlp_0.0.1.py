@@ -12,7 +12,6 @@ import pandas as pd
 import numpy as np
 import json
 
-debruijn_1 = "D:\\code\\uom_explore\\processed_data\\metrics_exp_brujin_seq_1.csv"
 spk_json = "D:\\code\\uom_explore\\data_science\\scripts\\parameter.json"
 
 def load_params(param_path):
@@ -36,18 +35,22 @@ def augment_data(X, y, noise_factor=0.05, num_augmentations=1):
     
     return torch.cat(augmented_X), torch.cat(augmented_y)
 
-def preprocess_data(df, ground_truth, heaters_to_keep, bmes_to_keep):
+def preprocess_data(df, ground_truth, heaters_to_keep, bmes_to_keep, sensor_features=None):
     all_columns = df.columns.tolist()
     features = [col for col in all_columns if col != 'experiment_id' and col != ground_truth]
 
     # Separate heater features and BME features
     heater_features = [feature for feature in features if feature.split('_')[-1].isdigit()]
-    
     bme_features = [feature for feature in features if not feature.split('_')[-1].isdigit()]
     
-    # Filter heater features based on settings_to_keep
-    heater_features_to_keep = [feature for feature in heater_features 
-                               if int(feature.split('_')[-1]) in heaters_to_keep]
+    # Filter heater features based on settings_to_keep and configurations
+    heater_features_to_keep = []
+    for heater in heaters_to_keep:
+        if sensor_features:
+            heater_features_to_keep.extend([f"{config}_{heater}" for config in sensor_features])
+        else:
+            heater_features_to_keep.extend([feature for feature in heater_features 
+                                            if feature.endswith(f"_{heater}")])
 
     # Filter BME features (excluding '_std' features)
     bmes_to_keep_tuple = tuple(bmes_to_keep)
@@ -177,6 +180,26 @@ def calculate_accuracy(y_pred, y_true):
     correct = (predicted == y_true).float().sum()
     return correct / y_true.shape[0]
 
+def plot_losses(train_losses, val_losses):
+    plt.figure(figsize=(12, 5))
+    plt.plot(train_losses, label='Training Loss')
+    plt.plot(val_losses, label='Validation Loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.title('Training and Validation Loss')
+    plt.legend()
+    plt.show()
+
+def plot_accuracies(train_accuracies, val_accuracies):
+    plt.figure(figsize=(12, 5))
+    plt.plot(train_accuracies, label='Training Accuracy')
+    plt.plot(val_accuracies, label='Validation Accuracy')
+    plt.xlabel('Epochs')
+    plt.ylabel('Accuracy')
+    plt.title('Training and Validation Accuracy')
+    plt.legend()
+    plt.show()
+
 def train_and_evaluate(model, criterion, optimizer, scheduler, scheduler_params, num_classes, train_loader, val_loader, epochs=10, patience=5):
     train_losses = []
     val_losses = []
@@ -240,16 +263,19 @@ def train_and_evaluate(model, criterion, optimizer, scheduler, scheduler_params,
         #         break
     cm = calculate_confusion_matrix(model, val_loader, num_classes=num_classes)
     plot_confusion_matrix(cm, class_names=['Class ' + str(i) for i in range(num_classes)])
+    plot_losses(train_losses, val_losses)
+    plot_accuracies(train_accuracies, val_accuracies)
 
     return model, train_losses, val_losses, train_accuracies, val_accuracies
 
 
 def main():
-    data_path = debruijn_1
+    
     param_path = spk_json
 
     params = load_params(param_path)
 
+    data_path = params['data_paths']['debruijn_1']
     hidden_size = params['mlp']['hidden_size']
     ground_truth = params['ground_truth']
     num_epochs = params['mlp']['num_epochs']
@@ -264,15 +290,10 @@ def main():
     df = load_data(data_path)
     y = df[ground_truth]
     num_classes = df[ground_truth].nunique()
-    heaters_to_keep = [160,162,165,167,170,
-                       172,175,177,180,182,
-                       185,187,190,192,195,
-                       197,200,202,205,210,
-                       212,215,217,220,222,
-                       225,227,230,232,235,
-                       237]
-    bmes_to_keep = ['_mean','_min','_max']
-    X, input_size = preprocess_data(df, ground_truth, heaters_to_keep, bmes_to_keep)
+    heaters_to_keep = params['feature_selection']['heaters_to_keep']
+    bmes_to_keep = params['feature_selection']['bmes_to_keep']
+    sensor_features = params['feature_selection'].get('sensor_features', None)
+    X, input_size = preprocess_data(df, ground_truth, heaters_to_keep, bmes_to_keep, sensor_features)
 
     print("Features:")
     print(json.dumps(X.columns.tolist(), indent=2))

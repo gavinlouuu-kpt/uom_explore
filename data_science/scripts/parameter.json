@@ -1,6 +1,70 @@
 {
     "ground_truth": "channel_id",
     "random_state": 42,
+    "data_paths": {
+        "debruijn_1": "D:\\code\\uom_explore\\processed_data\\metrics_exp_brujin_seq_1.csv"
+    },
+    "feature_selection": {
+        "heaters_to_keep": [
+            140,
+            143,
+            146,
+            149,
+            152,
+            155,
+            158,
+            161,
+            164,
+            167,
+            170,
+            173,
+            176,
+            179,
+            182,
+            185,
+            188,
+            191,
+            194,
+            197,
+            200,
+            203,
+            206,
+            209,
+            212,
+            215,
+            218,
+            221,
+            224,
+            227,
+            230,
+            233,
+            236,
+            239,
+            242,
+            245,
+            248,
+            250
+        ],
+        "bmes_to_keep": [
+            "_min"
+        ],
+        "bmes_features_full": [
+            "_mean",
+            "_min",
+            "_max",
+            "_std"
+        ],
+        "sensor_features": [
+            "baseline",
+            "responsivity",
+            "max_reaction_R"
+        ],
+        "sensor_features_full": [
+            "baseline",
+            "responsivity",
+            "max_reaction_R"
+        ]
+    },
     "mlp": {
         "num_epochs": 150,
         "batch_size": 32,
@@ -15,7 +79,7 @@
         ],
         "dropout": 0.3,
         "scheduler": {
-            "enabled": true,
+            "enabled": false,
             "patience": 5,
             "factor": 0.1,
             "threshold": 0.001,
@@ -24,8 +88,8 @@
         },
         "augmentation": {
             "enabled": true,
-            "noise_factor": 0.10,
-            "num_augmentations": 5
+            "noise_factor": 0.05,
+            "num_augmentations": 10
         }
     },
     "cnn": {

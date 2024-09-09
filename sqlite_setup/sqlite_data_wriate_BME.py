@@ -19,12 +19,16 @@ def extract_channel_id(file_name):
 def insert_data_from_csv(cursor, experiment_batch, experiment_id, channel_id, file_path):
     with open(file_path, 'r') as file:
         reader = csv.reader(file)
+        next(reader)  # Skip the header row
         for row in reader:
-            timestamp, temperature, humidity, pressure = map(float, row)
-            cursor.execute('''
-            INSERT INTO BME680Data (experiment_batch, experiment_id, channel_id, timestamp, temperature, humidity, pressure)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            ''', (experiment_batch, experiment_id, channel_id, int(timestamp), temperature, humidity, pressure))
+            try:
+                timestamp, temperature, humidity, pressure = map(float, row)
+                cursor.execute('''
+                INSERT INTO BME680Data (experiment_batch, experiment_id, channel_id, timestamp, temperature, humidity, pressure)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                ''', (experiment_batch, experiment_id, channel_id, int(timestamp), temperature, humidity, pressure))
+            except ValueError:
+                print(f"Skipping invalid row: {row}")
 
 def process_folders(db_path, root_folder):
     conn = sqlite3.connect(db_path)
@@ -45,7 +49,7 @@ def process_folders(db_path, root_folder):
     conn.close()
 
 if __name__ == '__main__':
-    root_folder = 'D:\\code\\uom_explore\\raw_data\\2024_08_29'
+    root_folder = 'D:\\code\\uom_explore\\raw_data\\2024_09_02'
     db_path = 'D:\\code\\uom_explore\\database\\voc_lab_2.db'
 
     query = '''
