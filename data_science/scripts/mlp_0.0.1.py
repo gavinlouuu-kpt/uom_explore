@@ -275,7 +275,7 @@ def main():
 
     params = load_params(param_path)
 
-    data_path = params['data_paths']['debruijn_1']
+    data_path = params['data_paths']['exp_async']
     hidden_size = params['mlp']['hidden_size']
     ground_truth = params['ground_truth']
     num_epochs = params['mlp']['num_epochs']

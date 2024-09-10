@@ -29,8 +29,8 @@ def apply_filter_and_concat(grouped, target_channel, window_size):
 
 def Vo2Resistance(group, target_channel, input_voltage, RL_2, bit_V):
     group['Vo'] = group[target_channel] * bit_V
-    # group['resistance'] = (RL_2 / group['Vo']) * ((input_voltage / group['Vo']) - 1) # when RL is in R1 position
-    group['resistance'] = (group['Vo']*RL_2) / (input_voltage - group['Vo']) # when RL is in R2 position
+    group['resistance'] = (RL_2 / group['Vo']) * ((input_voltage - group['Vo'])) # when Sensor is in R1 position
+    # group['resistance'] = (group['Vo']*RL_2) / (input_voltage - group['Vo']) # when Sensor is in R2 position
     return group
 
 def ratioCalculation(group):
@@ -99,6 +99,7 @@ def process_experiment_batch(db_path, experiment_batch, output_path, start_date=
     df_bme680_avg.rename(columns={'experiment_id_': 'experiment_id'}, inplace=True)
     
     # Merge BME680 data with metrics
+    # df_metrics = pivot_metrics(df_resistance)
     df_metrics = pivot_metrics(df_resistance)
     df_metrics = df_metrics.merge(df_bme680_avg, on='experiment_id', how='outer')
     
@@ -116,10 +117,10 @@ def process_experiment_batch(db_path, experiment_batch, output_path, start_date=
 
 if __name__ == '__main__':
     db_path = 'D:\\code\\uom_explore\\database\\voc_lab_2.db'
-    experiment_batch = 'exp_brujin_seq_1'  # Specify the experiment batch you want to process
+    experiment_batch = 'exp_efficiency_test_async_5'  # Specify the experiment batch you want to process
     output_path = 'D:\\code\\uom_explore\\processed_data'  # Specify the output directory
-    start_date = '20240829'  # Specify the start date in YYYYMMDD format
-    end_date = '20240829'  # Specify the end date in YYYYMMDD format
+    start_date = '20240909'  # Specify the start date in YYYYMMDD format
+    end_date = '20240909'  # Specify the end date in YYYYMMDD format
 
     df_metrics, df_exp = process_experiment_batch(db_path, experiment_batch, output_path, start_date, end_date)
     print(f"Processed data and metrics for batch '{experiment_batch}' from {start_date} to {end_date} have been saved to {output_path}")

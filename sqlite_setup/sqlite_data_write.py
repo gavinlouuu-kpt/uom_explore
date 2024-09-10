@@ -71,7 +71,7 @@ def process_folders(root_folder):
 if __name__ == '__main__':
 
     # Root folder containing all batch folders
-    root_folder = 'D:\\code\\uom_explore\\raw_data\\2024_09_02'
+    root_folder = 'D:\\code\\uom_explore\\raw_data\\2024_09_09'
     query = '''
     CREATE TABLE IF NOT EXISTS ExperimentData (
         experiment_batch TEXT NOT NULL,

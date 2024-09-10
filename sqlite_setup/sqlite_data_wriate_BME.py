@@ -49,7 +49,7 @@ def process_folders(db_path, root_folder):
     conn.close()
 
 if __name__ == '__main__':
-    root_folder = 'D:\\code\\uom_explore\\raw_data\\2024_09_02'
+    root_folder = 'D:\\code\\uom_explore\\raw_data\\2024_09_09'
     db_path = 'D:\\code\\uom_explore\\database\\voc_lab_2.db'
 
     query = '''

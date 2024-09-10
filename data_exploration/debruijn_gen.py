@@ -34,7 +34,7 @@ def verify_sequence(seq):
     print(f"\nSequence is {'valid' if is_valid else 'invalid'}")
 
 # Example usage
-symbols = [0, 1, 2, 3, 4]
+symbols = [0, 1, 2, 3, 4, 5]
 result = generate_debruijn_sequence(symbols)
 print("Generated sequence:", result)
 print("Sequence length:", len(result))

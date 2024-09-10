@@ -2,10 +2,12 @@
     "ground_truth": "channel_id",
     "random_state": 42,
     "data_paths": {
-        "debruijn_1": "D:\\code\\uom_explore\\processed_data\\metrics_exp_brujin_seq_1.csv"
+        "exp_async": "D:\\code\\uom_explore\\processed_data\\metrics_exp_efficiency_test_async_5.csv",
+        "debruijn_1": "D:\\code\\uom_explore\\processed_data\\metrics_de_brujin_large_even_1.csv",
+        "normalized_1": "D:\\code\\uom_explore\\processed_data\\2nd_process\\normalized_metrics_de_brujin_large_even_1.csv"
     },
     "feature_selection": {
-        "heaters_to_keep": [
+        "heaters": [
             140,
             143,
             146,
@@ -45,8 +47,52 @@
             248,
             250
         ],
+        "heaters_to_keep": [
+            140,
+            150,
+            152,
+            155,
+            157,
+            160,
+            162,
+            165,
+            167,
+            170,
+            172,
+            175,
+            177,
+            180,
+            182,
+            185,
+            187,
+            190,
+            192,
+            195,
+            197,
+            200,
+            202,
+            205,
+            210,
+            212,
+            215,
+            217,
+            220,
+            222,
+            225,
+            227,
+            230,
+            232,
+            235,
+            237,
+            240,
+            242,
+            245,
+            247,
+            250
+        ],
         "bmes_to_keep": [
-            "_min"
+            "_min",
+            "_max"
         ],
         "bmes_features_full": [
             "_mean",
@@ -56,8 +102,8 @@
         ],
         "sensor_features": [
             "baseline",
-            "responsivity",
-            "max_reaction_R"
+            "max_reaction_R",
+            "responsivity"
         ],
         "sensor_features_full": [
             "baseline",
@@ -67,19 +113,21 @@
     },
     "mlp": {
         "num_epochs": 150,
-        "batch_size": 32,
+        "batch_size": 64,
         "learning_rate": 0.001,
         "momentum_value": 0.9,
         "weight_decay": 0.00001,
         "hidden_size": [
             512,
-            256,
-            128,
-            64
+            512,
+            512,
+            512,
+            512,
+            256
         ],
-        "dropout": 0.3,
+        "dropout": 0.2,
         "scheduler": {
-            "enabled": false,
+            "enabled": true,
             "patience": 5,
             "factor": 0.1,
             "threshold": 0.001,
@@ -87,7 +135,7 @@
             "min_lr": 0.00001
         },
         "augmentation": {
-            "enabled": true,
+            "enabled": false,
             "noise_factor": 0.05,
             "num_augmentations": 10
         }
